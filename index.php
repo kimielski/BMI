@@ -1,6 +1,7 @@
 <?php
 error_reporting(-1);
 ini_set('display_errors', 'On');
+header('Content-Type: text/html; charset=utf-8');
 
 class Pound
 {
@@ -75,6 +76,16 @@ class BMICalculator
         $h = $h_foot * 0.3048;
 
         $bmi = $w / (pow($h, 2));
+        $bmi = round($bmi,2);
+
+        $bmi < 16.0 ? $bmi = 'wygłodzenie':'';
+        $bmi > 16.0 && $bmi < 16.99 ? $bmi = 'wychudzenie (spowodowane często przez ciężką chorobę lub anoreksję)' : '';
+        $bmi > 17.0 && $bmi < 18.49 ? $bmi = 'niedowaga' : '';
+        $bmi > 18.5 && $bmi < 24.99 ? $bmi = 'wartość prawidłowa' : '';
+        $bmi > 25.0 && $bmi < 29.99 ? $bmi = 'nadwaga' : '';
+        $bmi > 30.0 && $bmi < 34.99 ? $bmi = 'I stopień otyłości' : '';
+        $bmi > 35.0 && $bmi < 39.99 ? $bmi = 'II stopień otyłości (otyłość kliniczna)' : '';
+        $bmi >= 40.0 ? $bmi = 'III stopień otyłości (otyłość skrajna)': '';
         return $bmi;
     }
 }
