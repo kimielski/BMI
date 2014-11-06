@@ -13,14 +13,26 @@ class Pound
     }
 }
 
+class Kilogram
+{
+    public $value;
+
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
+}
 
 class Weight
 {
     public $pound;
+    public $kilogram;
 
-    public function __construct($pound)
+
+    public function __construct($myweight)
     {
-        $this->pound = $pound;
+        $this->pound = $myweight;
+        $this->kilogram = $myweight;
     }
 }
 
@@ -34,13 +46,25 @@ class Foot
     }
 }
 
+class Meter
+{
+    public $value;
+
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
+}
+
 class Height
 {
     public $foot;
+    public $meter;
 
-    public function __construct($foot)
+    public function __construct($myheight)
     {
-        $this->foot = $foot;
+        $this->foot = $myheight;
+        $this->meter = $myheight;
     }
 }
 
@@ -52,14 +76,27 @@ class BMICalculator
 
     public function setWeight($weight)
     {
-        $this->weight = $weight->pound->value;
-        return $this;
+		if ($weight->pound->value) {
+			$this->weightpound = $weight->pound->value;
+			return $this;
+		}
+		else {
+			$this->weightkg = $weight->kilogram->value;
+			return $this;
+		}
+        
     }
 
     public function setHeight($height)
     {
-        $this->height = $height->foot->value;
+		if ($height->foot->value) {
+        $this->heightfoot = $height->foot->value;
         return $this;
+		}
+		else {
+			$this->heightmeter = $height->meter->value;
+			return $this;
+			}
     }
 
     public function getResultAsExtendedClassification()
@@ -69,13 +106,28 @@ class BMICalculator
         //kg = lb x 0.45359237
         //m = feet x 0.3048
 
-        $w_pound = $this->weight;
-        $h_foot = $this->height;
 
-        $w = $w_pound * 0.45359237;
-        $h = $h_foot * 0.3048;
+		if($this->weightpound) {
+			$w_pound = $this->weightpound;
+			$w = $w_pound * 0.45359237;
+		}
+		else {
+			$w_kg = $this->weightkg;
+			$w = $w_kg;
+		}
+		
+		if ($this->heightfoot){
+			$h_foot = $this->heightfoot;
+			$h = $h_foot * 0.3048;
+		}
+		else {
+			$h_meter = $this->heightmeter;
+			$h = $h_meter;
+		}
+
 
         $bmi = $w / (pow($h, 2));
+        $bmi2 = $bmi;
         $bmi = round($bmi,2);
 
         $bmi < 16.0 ? $bmi = 'wygłodzenie':'';
@@ -99,3 +151,11 @@ $result = $BMICalc
 
 echo sprintf('Result: "%s"', $result);
 
+echo PHP_EOL;
+
+$result = $BMICalc
+    ->setWeight(new Weight(new Kilogram(300)))
+    ->setHeight(new Height(new Meter(400)))
+    ->getResultAsExtendedClassification();
+
+echo sprintf('Result: "%s"', $result);
